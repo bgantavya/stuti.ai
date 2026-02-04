@@ -37,4 +37,4 @@ class BotEngine:
             response = self.chatSession.send_message(user_text)
             return response.text
         except Exception as e:
-            return TimeoutError(f'Error communicating with Stuti: {e}')
+            return f'Error communicating with Stuti: {e}'
