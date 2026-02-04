@@ -76,7 +76,8 @@ class ChatGUI:
             self.chatArea.insert(tk.END, "Stuti is typing...", ("typing",))
         else:
             content = self.chatArea.get("1.0", tk.END)
-            if "Stuti is typing..." in content.splitlines()[-1]:
+            lines = content.splitlines()
+            if lines and "Stuti is typing..." in lines[-1]:
                  self.chatArea.delete("end-1c linestart", "end")
         self.chatArea.config(state=tk.DISABLED)
         self.chatArea.see(tk.END)
