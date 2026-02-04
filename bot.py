@@ -9,9 +9,9 @@ class BotEngine:
         self.apiKey = os.getenv('GOOGLE_API_KEY')
         self.client = None
         self.chatSession = None
-        self.InitializeClient()
+        self.initialize_client()
 
-    def InitializeClient(self):
+    def initialize_client(self):
         '''Validate API key and setup a GENAI client'''
         if not self.apiKey or self.apiKey == 'YOUR_API_KEY_HERE':
             raise ValueError('Invalid API Key. Please check your environment variables. (.env)[file]')
@@ -28,7 +28,7 @@ class BotEngine:
         except Exception as e:
             raise ConnectionError(f'Failed to Establish connection: {e}')
 
-    def getResponse(self, user_text):
+    def get_response(self, user_text):
         '''Sends text to AI and returns the response text.'''
         if not self.chatSession:
             return "Error: AI Client not initialized."
@@ -37,4 +37,4 @@ class BotEngine:
             response = self.chatSession.send_message(user_text)
             return response.text
         except Exception as e:
-            return TimeoutError(f'Error communicating with Stuti: {e}')
+            return f"Error communicating with Stuti: {e}"
