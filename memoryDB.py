@@ -1,41 +1,85 @@
+import os
 import sqlite3
 from datetime import datetime
 
-class Memory:
-    def __init__(self, db_name="memoryStuti.db"):
-        self.db_name = db_name
-        self.CreateTable()
 
-    def CreateTable(self):
-        """Creates the messages table if it doesn't exist."""
+class MemoryDB:
+    def __init__(self, db_name=None):
+        if db_name:
+            self.db_name = db_name
+        else:
+            self.db_name = os.path.join(os.path.dirname(__file__), "memoryStuti.db")
+        self._ensure_schema()
+
+    def _ensure_schema(self):
+        """Creates or migrates the messages table."""
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
-            cursor.execute('''
+
+            cursor.execute(
+                """
                 CREATE TABLE IF NOT EXISTS memory (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    fact TEXT,
-                    timestamp DATETIME
+                    role TEXT NOT NULL,
+                    message TEXT NOT NULL,
+                    timestamp DATETIME NOT NULL
                 )
-            ''')
+                """
+            )
+
+            cursor.execute("PRAGMA table_info(memory)")
+            columns = {row[1] for row in cursor.fetchall()}
+
+            if "fact" in columns and "message" not in columns:
+                cursor.execute("ALTER TABLE memory RENAME TO memory_old")
+                cursor.execute(
+                    """
+                    CREATE TABLE memory (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        role TEXT NOT NULL,
+                        message TEXT NOT NULL,
+                        timestamp DATETIME NOT NULL
+                    )
+                    """
+                )
+                cursor.execute(
+                    """
+                    INSERT INTO memory (role, message, timestamp)
+                    SELECT 'user', fact, timestamp FROM memory_old
+                    """
+                )
+                cursor.execute("DROP TABLE memory_old")
+
             conn.commit()
 
-    def save_message(self, fact):
-        """Saves a fact about user in memory."""
+    def save_message(self, role, message):
+        """Saves a chat message with role and timestamp."""
+        if not message:
+            return
+
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO memory (fact, timestamp) VALUES (?, ?)",
-                (fact, datetime.now())
+                "INSERT INTO memory (role, message, timestamp) VALUES (?, ?, ?)",
+                (role, message, datetime.now())
             )
             conn.commit()
 
     def load_history(self, limit=20):
-        """Fetches the last N messages to provide context to the AI."""
+        """Fetches the last N messages for chat context."""
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "SELECT fact FROM memory ORDER BY id DESC LIMIT ?",
+                """
+                SELECT role, message, timestamp
+                FROM memory
+                ORDER BY id DESC
+                LIMIT ?
+                """,
                 (limit,)
             )
             history = cursor.fetchall()
             return history[::-1]
+
+
+DB = MemoryDB

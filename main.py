@@ -1,6 +1,12 @@
 from tkinter import Tk
-from gui import ChatGUI
-from bot import BotEngine
+
+try:
+    from .gui import ChatGUI
+    from .bot import BotEngine
+except ImportError:
+    from gui import ChatGUI
+    from bot import BotEngine
+
 if __name__ == '__main__':
     root = Tk()
     bot = BotEngine()
