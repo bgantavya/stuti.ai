@@ -1,4 +1,5 @@
 from ddgs import DDGS
+from google import genai
 
 class SearchTool:
     def __init__(self, max_results=3):
@@ -20,3 +21,21 @@ class SearchTool:
                 return "\n\n".join(formatted_results)
         except Exception as e:
             return f"Oops, internet nakhre dikha raha hai: {e}"
+        
+    # DDGS_whois = {
+
+    # }
+
+class Memory:
+    def getFacts():
+        print("hello")
+    def addFact(fact):
+        print(fact)
+
+    GETF_whois = ''
+    ADDF_whois = ''
+
+class GS:
+    grounding_tool = genai.types.Tool(
+        google_search = genai.types.GoogleSearch()
+    )

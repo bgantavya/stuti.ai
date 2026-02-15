@@ -1,4 +1,7 @@
-import configs
+try:
+    from . import configs
+except ImportError:
+    import configs
 import threading
 import tkinter as tk
 from tkinter import scrolledtext, messagebox
