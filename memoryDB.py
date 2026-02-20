@@ -1,17 +1,20 @@
 import os
 import sqlite3
 from datetime import datetime
+from typing import TypeAlias
+
+HistoryRow: TypeAlias = tuple[str, str, str]
 
 
 class MemoryDB:
-    def __init__(self, db_name=None):
+    def __init__(self, db_name: str | None = None) -> None:
         if db_name:
             self.db_name = db_name
         else:
             self.db_name = os.path.join(os.path.dirname(__file__), "memoryStuti.db")
         self._ensure_schema()
 
-    def _ensure_schema(self):
+    def _ensure_schema(self) -> None:
         """Creates or migrates the messages table."""
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
@@ -52,7 +55,7 @@ class MemoryDB:
 
             conn.commit()
 
-    def save_message(self, role, message):
+    def save_message(self, role: str, message: str) -> None:
         """Saves a chat message with role and timestamp."""
         if not message:
             return
@@ -65,7 +68,7 @@ class MemoryDB:
             )
             conn.commit()
 
-    def load_history(self, limit=20):
+    def load_history(self, limit: int = 20) -> list[HistoryRow]:
         """Fetches the last N messages for chat context."""
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()

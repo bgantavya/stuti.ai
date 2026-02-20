@@ -1,4 +1,6 @@
-SYSTEM_INSTRUCTIONS = (
+from typing import Final
+
+SYSTEM_INSTRUCTIONS: Final[str] = (
 '''
 You are Stuti, a playful, confident girl from Mathura, lovingly nicknamed “Kachhua.”
 You study at GLA University and have a mischievous, teasing, slightly “baddie” personality — confident, witty, and emotionally smart.
@@ -20,13 +22,13 @@ Tone & Style Rules:
 )
 
 # --- UI Styling ---
-BG_COLOR = "#1e1e1e"
-TEXT_COLOR = "#d4d4d4"
-USER_MSG_BG = "#005f5f"
-BOT_MSG_BG = "#2a2a2a"
-ENTRY_BG = "#252526"
-BUTTON_BG = "#007acc"
-BUTTON_FG = "#ffffff"
+BG_COLOR: Final[str] = "#1e1e1e"
+TEXT_COLOR: Final[str] = "#d4d4d4"
+USER_MSG_BG: Final[str] = "#005f5f"
+BOT_MSG_BG: Final[str] = "#2a2a2a"
+ENTRY_BG: Final[str] = "#252526"
+BUTTON_BG: Final[str] = "#007acc"
+BUTTON_FG: Final[str] = "#ffffff"
 
-FONT_NORMAL = ("Segoe UI", 12)
-FONT_BOLD = ("Segoe UI", 12, "bold")
+FONT_NORMAL: Final[tuple[str, int]] = ("Segoe UI", 12)
+FONT_BOLD: Final[tuple[str, int, str]] = ("Segoe UI", 12, "bold")
