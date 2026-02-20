@@ -5,6 +5,9 @@ from configs import SYSTEM_INSTRUCTIONS
 from tools import GS
 from memoryDB import MemoryDB
 
+# TODO: need to ad exception so if we lack model availability we transfer calls to a lower val model
+# or figure out ollama endpoint
+
 class BotEngine:
     def __init__(self):
         dotenv.load_dotenv()
@@ -23,7 +26,7 @@ class BotEngine:
             self.client = genai.Client(api_key=self.apiKey)
             history = self._format_history(self.memory.load_history())
             self.chatSession = self.client.chats.create(
-                model='gemini-2.5-flash-lite',
+                model='gemini-2.5-flash',
                 config=genai.types.GenerateContentConfig(
                     system_instruction=SYSTEM_INSTRUCTIONS,
                     temperature=1,
