@@ -4,20 +4,21 @@ from google import genai
 from configs import SYSTEM_INSTRUCTIONS
 from tools import GS
 from memoryDB import MemoryDB
+from typing import Any
 
 # TODO: need to ad exception so if we lack model availability we transfer calls to a lower val model
 # or figure out ollama endpoint
 
 class BotEngine:
-    def __init__(self):
+    def __init__(self) -> None:
         dotenv.load_dotenv()
-        self.apiKey = os.getenv('GOOGLE_API_KEY')
-        self.client = None
-        self.chatSession = None
+        self.apiKey: str | None = os.getenv('GOOGLE_API_KEY')
+        self.client: Any | None = None
+        self.chatSession: Any | None = None
         self.memory = MemoryDB()
         self.InitializeClient()
 
-    def InitializeClient(self):
+    def InitializeClient(self) -> None:
         '''Validate API key and setup a GENAI client'''
         if not self.apiKey or self.apiKey == 'YOUR_API_KEY_HERE':
             raise ValueError('Invalid API Key. Please check your environment variables. (.env)[file]')
@@ -40,15 +41,15 @@ class BotEngine:
         except Exception as e:
             raise ConnectionError(f'Failed to Establish connection: {e}')
 
-    def _format_history(self, history_rows):
-        formatted = []
+    def _format_history(self, history_rows: list[tuple[str, str, str]]) -> list[dict[str, Any]]:
+        formatted: list[dict[str, Any]] = []
         for role, message, _timestamp in history_rows:
             if not message:
                 continue
             formatted.append({"role": role, "parts": [{"text": message}]})
         return formatted
 
-    def getResponse(self, user_text):
+    def getResponse(self, user_text: str) -> str:
         '''Sends text to AI and returns the response text.'''
         if not self.chatSession:
             return "Error: AI Client not initialized."

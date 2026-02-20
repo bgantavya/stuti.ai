@@ -1,11 +1,12 @@
 from ddgs import DDGS
 from google import genai
+from typing import Any
 
 class SearchTool:
-    def __init__(self, max_results=3):
+    def __init__(self, max_results: int = 3) -> None:
         self.max_results = max_results
 
-    def search(self, query):
+    def search(self, query: str) -> str:
         """Performs a web search and returns a formatted string of results."""
         try:
             with DDGS() as ddgs:
@@ -14,7 +15,7 @@ class SearchTool:
                 if not results:
                     return "Arre, kuch mila hi nahi internet pe!"
 
-                formatted_results = []
+                formatted_results: list[str] = []
                 for r in results:
                     formatted_results.append(f"Title: {r['title']}\nSnippet: {r['body']}\nLink: {r['href']}")
                 
@@ -27,15 +28,16 @@ class SearchTool:
     # }
 
 class Memory:
-    def getFacts():
-        print("hello")
-    def addFact(fact):
-        print(fact)
+    def __init__(self) -> None:
+        self.facts: list[str] = []
 
-    GETF_whois = ''
-    ADDF_whois = ''
+    def getFacts(self) -> list[str]:
+        return self.facts
+
+    def addFact(self, fact: str) -> None:
+        self.facts.append(fact)
 
 class GS:
-    grounding_tool = genai.types.Tool(
-        google_search = genai.types.GoogleSearch()
+    grounding_tool: Any = genai.types.Tool(
+        google_search=genai.types.GoogleSearch()
     )
