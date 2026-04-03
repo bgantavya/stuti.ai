@@ -1,11 +1,6 @@
 from tkinter import Tk
-
-try:
-    from .gui import ChatGUI
-    from .bot import BotEngine
-except ImportError:
-    from gui import ChatGUI
-    from bot import BotEngine
+from gui import ChatGUI
+from bot import BotEngine
 
 
 class StutiApp:
