@@ -2,7 +2,6 @@ import os
 import dotenv
 from configs import SYSTEM_INSTRUCTIONS
 from google import genai
-
 class BotEngine:
     def __init__(self):
         dotenv.load_dotenv()
@@ -23,7 +22,15 @@ class BotEngine:
                 config = genai.types.GenerateContentConfig(
                     system_instruction=SYSTEM_INSTRUCTIONS,
                     temperature=1,
-                )
+                    thinking_config=types.ThinkingConfig(
+                        thinking_level="high",
+                        include_thoughts=True,
+                        thinking_budget=-1,
+                        ),
+                    tool_config='',
+                    tools=[],
+                ),
+                history = [],
             )
         except Exception as e:
             raise ConnectionError(f'Failed to Establish connection: {e}')
